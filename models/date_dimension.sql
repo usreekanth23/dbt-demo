@@ -1,15 +1,16 @@
-WITH CTE AS (
-SELECT
+with
+    cte as (
+        select
 
-TO_TIMESTAMP(STARTED_AT) AS STARTED_AT,
-DATE(TO_TIMESTAMP(STARTED_AT)) As DATE_STARTED_AT,
-HOUR(TO_TIMESTAMP(STARTED_AT)) As HOUR_STARTED_AT,
-{{day_type('STARTED_AT')}} AS DAY_TYPE,
-{{get_season('STARTED_AT')}} AS SEASON_OF_YEAR
+            to_timestamp(started_at) as started_at,
+            date(to_timestamp(started_at)) as date_started_at,
+            hour(to_timestamp(started_at)) as hour_started_at,
+            {{ day_type("STARTED_AT") }} as day_type,
+            {{ get_season("STARTED_AT") }} as season_of_year
 
-  FROM
-{{source('demo','bike')}}
-WHERE STARTED_AT != 'started_at'
-)
+        from {{ ref('stg_bike') }}
+        where started_at != 'started_at'
+    )
 
-SELECT * FROM CTE
+select *
+from cte
